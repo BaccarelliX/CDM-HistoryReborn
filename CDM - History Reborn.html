@@ -181,14 +181,39 @@
             border-radius: 50%;
             margin: 5px;
             cursor: pointer;
-            border: 2px solid #ffffff; /* Borda branca */
+            border: 2px solid #ffffff;
         }
 
         .light-blue { background-color: #add8e6; }
         .light-orange { background-color: #ffb347; }
         .light-pink { background-color: #ffb6c1; }
         .light-green { background-color: #90ee90; }
-        .light-gray { background-color: #333333; } /* Substituído light-gray por #333333 */
+        .light-gray { background-color: #333333; }
+        
+        /* Estilo do botão "Salvar" */
+        .save-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #7FFFD4;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: transform 0.1s ease-in-out, background-color 0.3s ease;
+        }
+
+        .save-button:hover {
+            background-color: #66CCBF;
+            transform: scale(1.05);
+        }
+
+        .save-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -210,9 +235,13 @@
         </a>
     </div>
 
+    <!-- Botão "Salvar" -->
+    <button class="save-button" id="saveBtn">Salvar</button>
+
     <script>
         const container = document.getElementById('buttonContainer');
         const newItemBtn = document.getElementById('newItemBtn');
+        const saveBtn = document.getElementById('saveBtn');
         let itemCount = 0;
 
         // Função para carregar os dados salvos do localStorage
@@ -227,16 +256,17 @@
         }
 
         // Função para salvar os dados no localStorage
-        function saveData() {
+        function saveAllData() {
             const items = [];
             document.querySelectorAll('.button-container').forEach((container, index) => {
                 const id = container.querySelector(`#inputNumber${index + 1}`).value;
                 const description = container.querySelector(`#inputDescription${index + 1}`).value;
                 const note = container.querySelector(`#inputNote${index + 1}`).value;
-                const color = container.querySelector('.input-container').style.backgroundColor;  // Salva a cor do input-container
+                const color = container.querySelector('.input-container').style.backgroundColor;
                 items.push({ id, description, note, color });
             });
             localStorage.setItem('items', JSON.stringify(items));
+            alert('Informações salvas com sucesso!');
         }
 
         // Função para adicionar um novo grupo de inputs
@@ -247,7 +277,7 @@
 
             const inputContainer = document.createElement('div');
             inputContainer.className = 'input-container';
-            inputContainer.style.backgroundColor = storedData.color || '#333333'; // Cor armazenada ou padrão
+            inputContainer.style.backgroundColor = storedData.color || '#333333';
 
             const inputField = document.createElement('div');
             inputField.className = 'input-field';
@@ -261,7 +291,6 @@
             inputNumber.value = storedData.id || '';
             inputNumber.oninput = function() {
                 inputNumber.value = inputNumber.value.replace(/\D/g, '');
-                saveData(); 
             };
 
             const inputDescription = document.createElement('input');
@@ -269,18 +298,12 @@
             inputDescription.placeholder = 'Nome do Item';
             inputDescription.id = `inputDescription${index}`;
             inputDescription.value = storedData.description || '';
-            inputDescription.oninput = function() {
-                saveData(); 
-            };
 
             const inputNote = document.createElement('input');
             inputNote.type = 'text';
             inputNote.placeholder = 'Anotação';
             inputNote.id = `inputNote${index}`;
             inputNote.value = storedData.note || '';
-            inputNote.oninput = function() {
-                saveData(); 
-            };
 
             inputField.appendChild(inputNumber);
             inputField.appendChild(inputDescription);
@@ -301,7 +324,6 @@
                 } else {
                     window.open(`https://historyreborn.net/?module=item&action=view&id=${id}`, '_blank');
                 }
-                saveData();
             };
 
             const deleteButton = document.createElement('button');
@@ -341,7 +363,7 @@
                     <div class="color-option light-orange" onclick="changeColor(${index}, '#ffb347')"></div>
                     <div class="color-option light-pink" onclick="changeColor(${index}, '#ffb6c1')"></div>
                     <div class="color-option light-green" onclick="changeColor(${index}, '#90ee90')"></div>
-                    <div class="color-option light-gray" onclick="changeColor(${index}, '#333333')"></div> <!-- Alterado para #333333 -->
+                    <div class="color-option light-gray" onclick="changeColor(${index}, '#333333')"></div>
                 `;
                 container.appendChild(colorPicker);
             }
@@ -353,7 +375,6 @@
             const container = document.querySelector(`.button-container[data-index="${index}"]`);
             const inputContainer = container.querySelector('.input-container');
             inputContainer.style.backgroundColor = color;  
-            saveData(); // Salvando após a alteração da cor
         }
 
         // Função para excluir um container
@@ -363,7 +384,7 @@
                 containerToRemove.remove();
                 const storedData = JSON.parse(localStorage.getItem('items'));
                 if (storedData) {
-                    storedData.splice(index - 1, 1); 
+                    storedData.splice(index - 1, 1);
                     localStorage.setItem('items', JSON.stringify(storedData));
                 }
             }
@@ -383,7 +404,11 @@
         newItemBtn.onclick = function() {
             itemCount++;
             addItemGroup(itemCount);
-            saveData();
+        };
+
+        // Adiciona as informações ao salvar
+        saveBtn.onclick = function() {
+            saveAllData();
         };
     </script>
 </body>
