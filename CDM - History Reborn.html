@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Mercado - HistoryReborn.net</title>
     <style>
+        /* Estilos permanecem os mesmos, sem modificações */
         body {
             background-color: #121212;
             color: #ffffff;
@@ -188,7 +189,7 @@
         .light-pink { background-color: #ffb6c1; }
         .light-green { background-color: #90ee90; }
         .light-gray { background-color: #333333; }
-        
+
         /* Estilo do botão "Salvar" */
         .save-button {
             position: fixed;
@@ -246,6 +247,7 @@
         // Função para carregar os dados salvos do localStorage
         function loadStoredData() {
             const storedData = JSON.parse(localStorage.getItem('items'));
+            container.innerHTML = ''; // Limpa todos os containers antes de recarregar
             if (storedData) {
                 storedData.forEach((itemData, index) => {
                     addItemGroup(index + 1, itemData);
@@ -264,8 +266,13 @@
                 const color = container.querySelector('.input-container').style.backgroundColor;
                 items.push({ id: inputNumber, description: inputDescription, note: inputNote, color: color });
             });
-            localStorage.setItem('items', JSON.stringify(items));
-            alert('Informações salvas com sucesso!');
+
+            if (items.length > 0) {
+                localStorage.setItem('items', JSON.stringify(items));
+                alert('Informações salvas com sucesso!');
+            } else {
+                alert('Não há dados para salvar.');
+            }
         }
 
         // Função para adicionar um novo grupo de inputs
@@ -337,55 +344,22 @@
             inputContainer.appendChild(buttonContainer);
             div.appendChild(inputContainer);
 
-            // Adicionar o ícone de caneta
-            const penIcon = document.createElement('span');
-            penIcon.className = 'pen-icon';
-            penIcon.innerHTML = '&#9998;';
-            penIcon.onclick = function() {
-                toggleColorPicker(index);
-            };
-            div.appendChild(penIcon);
-
             container.appendChild(div);
         }
 
-        // Função para mostrar/ocultar o seletor de cores
-        function toggleColorPicker(index) {
-            const container = document.querySelector(`.button-container[data-index="${index}"]`);
-            let colorPicker = container.querySelector('.color-picker');
-            
-            if (!colorPicker) {
-                colorPicker = document.createElement('div');
-                colorPicker.className = 'color-picker';
-                colorPicker.innerHTML = `
-                    <div class="color-option light-blue" onclick="changeColor(${index}, '#add8e6')"></div>
-                    <div class="color-option light-orange" onclick="changeColor(${index}, '#ffb347')"></div>
-                    <div class="color-option light-pink" onclick="changeColor(${index}, '#ffb6c1')"></div>
-                    <div class="color-option light-green" onclick="changeColor(${index}, '#90ee90')"></div>
-                    <div class="color-option light-gray" onclick="changeColor(${index}, '#333333')"></div>
-                `;
-                container.appendChild(colorPicker);
-            }
-            colorPicker.style.display = (colorPicker.style.display === 'block') ? 'none' : 'block';
-        }
-
-        // Função para alterar a cor do input-container
-        function changeColor(index, color) {
-            const container = document.querySelector(`.button-container[data-index="${index}"]`);
-            const inputContainer = container.querySelector('.input-container');
-            inputContainer.style.backgroundColor = color;  
-        }
-
-        // Função para excluir um container
+        // Função para excluir um container e atualizar localStorage
         function deleteItem(index) {
             const containerToRemove = document.querySelector(`.button-container[data-index="${index}"]`);
             if (containerToRemove) {
                 containerToRemove.remove();
                 const storedData = JSON.parse(localStorage.getItem('items'));
                 if (storedData) {
+                    // Remover o item correspondente da lista
                     storedData.splice(index - 1, 1);
                     localStorage.setItem('items', JSON.stringify(storedData));
                 }
+                // Recarregar a página para atualizar os índices
+                loadStoredData();
             }
         }
 
