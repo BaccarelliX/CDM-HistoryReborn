@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-// Desenvolvido por BaccarelliX [Twitch.tv/BaccarelliX]
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -224,7 +223,7 @@
         </div>
     </div>
     <div class="container" id="buttonContainer">
-        <!-- O primeiro container será agora adicionado de forma dinâmica com as mesmas configurações dos novos containers -->
+        <!-- Os containers serão gerados dinamicamente aqui -->
     </div>
 
     <div class="footer">
@@ -259,11 +258,11 @@
         function saveAllData() {
             const items = [];
             document.querySelectorAll('.button-container').forEach((container, index) => {
-                const id = container.querySelector(`#inputNumber${index + 1}`).value;
-                const description = container.querySelector(`#inputDescription${index + 1}`).value;
-                const note = container.querySelector(`#inputNote${index + 1}`).value;
+                const inputNumber = container.querySelector(`#inputNumber${index + 1}`).value;
+                const inputDescription = container.querySelector(`#inputDescription${index + 1}`).value;
+                const inputNote = container.querySelector(`#inputNote${index + 1}`).value;
                 const color = container.querySelector('.input-container').style.backgroundColor;
-                items.push({ id, description, note, color });
+                items.push({ id: inputNumber, description: inputDescription, note: inputNote, color: color });
             });
             localStorage.setItem('items', JSON.stringify(items));
             alert('Informações salvas com sucesso!');
