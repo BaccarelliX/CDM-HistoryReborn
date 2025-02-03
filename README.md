@@ -19,3 +19,5 @@ Tem alguma dica para melhorar o CDM? Envie para o Discord: Baccarelli
 
 IMPORTANTE: Por se tratar de uma página simples, todo o registro fica guardado em seu navegador,
 garanta que sempre estará usando o mesmo navegador para que você não perca nenhum registro, e mantenha apenas 1 aba aberta com o CDM!
+
+Desenvolvido por BaccarelliX [Twitch.tv/BaccarelliX] - Ao vivo todos os dias às 08h da manhã!
